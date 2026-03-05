@@ -1,0 +1,34 @@
+# Python cache/artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+.env
+.env.*
+
+# Build/package output
+build/
+dist/
+*.whl
+
+# Test reports
+reports/
+coverage.xml
+.htmlcov/
+
+# Docs output
+docs/build/
+docs/source/reference/generated/
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
