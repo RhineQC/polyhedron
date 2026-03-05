@@ -1,0 +1,66 @@
+stages:
+  - test
+  - package
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PYTHONPATH: "$CI_PROJECT_DIR/src:$PYTHONPATH"
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .cache/pip
+
+.test-template:
+  stage: test
+  tags:
+    - shell
+  before_script:
+    - python3 -m venv --clear venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install --upgrade pytest
+
+test-core:
+  extends: .test-template
+  script:
+    - pip install -e .
+    - python -m pytest -q -m "not scip and not gurobi and not data and not bridge"
+
+test-data:
+  extends: .test-template
+  script:
+    - pip install -e '.[data]'
+    - python -m pytest -q -m "data"
+
+test-bridge:
+  extends: .test-template
+  script:
+    - pip install -e '.[bridge]'
+    - python -m pytest -q -m "bridge"
+
+test-scip:
+  extends: .test-template
+  script:
+    - pip install -e '.[scip]'
+    - python -m pytest -q -m "scip"
+
+test-gurobi:
+  extends: .test-template
+  allow_failure: true
+  rules:
+    - if: '$RUN_GUROBI == "1"'
+    - when: never
+  script:
+    - pip install -e '.[gurobi]'
+    - python -m pytest -q -m "gurobi"
+
+package-build:
+  stage: package
+  tags:
+    - shell
+  script:
+    - python3 -m venv --clear venv
+    - source venv/bin/activate
+    - pip install --upgrade pip build
+    - python -m build
