@@ -1,5 +1,5 @@
 <p>
-  <img src="docs/assets/icon-small.png" alt="Polyhedron logo" width="56" />
+  <img src="https://raw.githubusercontent.com/RhineQC/polyhedron/main/docs/assets/icon-small.png" alt="Polyhedron logo" width="56" />
   |
   <strong>Polyhedron</strong> - Python optimization modeling framework for domain-driven MILP/MIQP workflows.
 </p>
