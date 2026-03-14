@@ -19,8 +19,15 @@ git push origin vX.Y.Z
 
 ## 3. Publish artifacts
 
-The GitHub workflow `.github/workflows/release.yml` builds source/wheel artifacts
-and publishes on tag pushes.
+GitHub Actions is restricted to test execution only. Publishing is a manual step.
+
+Build and upload artifacts locally:
+
+```bash
+python -m build
+python -m twine check dist/*
+python -m twine upload dist/*
+```
 
 ## 4. Post-release
 
