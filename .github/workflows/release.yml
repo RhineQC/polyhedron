@@ -23,10 +23,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest scipy
+        run: python -m pip install --upgrade pip pytest
 
-      - name: Install package with SCIP and HiGHS extras
-        run: python -m pip install -e ".[scip,highs]"
+      - name: Install package with Pyomo, SCIP and HiGHS extras
+        run: python -m pip install -e ".[scip,highs,bridge]"
 
       - name: Run base test profile
         run: PYTHONPATH=src pytest -q -m "not scip and not gurobi and not glpk and not highs and not data and not bridge"
@@ -36,3 +36,6 @@ jobs:
 
       - name: Run HiGHS test profile
         run: PYTHONPATH=src pytest -q -m "highs"
+
+      - name: Run Bridge test profile
+        run: PYTHONPATH=src pytest -q -m "bridge"
