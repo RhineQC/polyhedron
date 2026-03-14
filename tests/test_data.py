@@ -46,8 +46,11 @@ def test_from_sql_mapping():
     create_engine = sqlalchemy.create_engine
     text = sqlalchemy.text
     engine = create_engine("sqlite://")
-    with engine.begin() as conn:
-        conn.execute(text("CREATE TABLE t (name TEXT, col REAL)"))
-        conn.execute(text("INSERT INTO t (name, col) VALUES ('c', 3)"))
-        items = list(from_sql(Dummy, "SELECT name, col FROM t", conn, mapping={"col": "x"}))
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("CREATE TABLE t (name TEXT, col REAL)"))
+            conn.execute(text("INSERT INTO t (name, col) VALUES ('c', 3)"))
+            items = list(from_sql(Dummy, "SELECT name, col FROM t", conn, mapping={"col": "x"}))
+    finally:
+        engine.dispose()
     assert len(items) == 1

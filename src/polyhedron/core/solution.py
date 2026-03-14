@@ -19,6 +19,10 @@ class Solution:
     message: Optional[str] = None
     constraint_duals: Optional[Mapping[Constraint, float]] = None
     constraint_slacks: Optional[Mapping[Constraint, float]] = None
+    reduced_costs: Optional[Mapping[Variable, float]] = None
+    active_constraints: Optional[tuple[Constraint, ...]] = None
+    objective_breakdown: Optional[Mapping[str, float]] = None
+    metrics: Optional[Mapping[str, float]] = None
 
     def __post_init__(self) -> None:
         values_copy = dict(self.values)
@@ -38,6 +42,24 @@ class Solution:
             _validate_numeric_mapping(slacks_copy, label="constraint_slacks")
             object.__setattr__(self, "constraint_slacks", MappingProxyType(slacks_copy))
 
+        if self.reduced_costs is not None:
+            reduced_costs_copy = dict(self.reduced_costs)
+            _validate_numeric_mapping(reduced_costs_copy, label="reduced_costs")
+            object.__setattr__(self, "reduced_costs", MappingProxyType(reduced_costs_copy))
+
+        if self.objective_breakdown is not None:
+            objective_breakdown_copy = dict(self.objective_breakdown)
+            _validate_numeric_mapping(objective_breakdown_copy, label="objective_breakdown")
+            object.__setattr__(self, "objective_breakdown", MappingProxyType(objective_breakdown_copy))
+
+        if self.metrics is not None:
+            metrics_copy = dict(self.metrics)
+            _validate_numeric_mapping(metrics_copy, label="metrics")
+            object.__setattr__(self, "metrics", MappingProxyType(metrics_copy))
+
+        if self.active_constraints is not None:
+            object.__setattr__(self, "active_constraints", tuple(self.active_constraints))
+
     @classmethod
     def from_solve_result(cls, result: SolveResult) -> "Solution":
         return cls(
@@ -46,6 +68,12 @@ class Solution:
             values=result.values,
             solver_name=result.solver_name,
             message=result.message,
+            constraint_duals=result.constraint_duals,
+            constraint_slacks=result.constraint_slacks,
+            reduced_costs=result.reduced_costs,
+            active_constraints=result.active_constraints,
+            objective_breakdown=result.objective_breakdown,
+            metrics=result.metrics,
         )
 
 
@@ -114,6 +142,12 @@ class SolvedModel:
             values=transferred,
             solver_name=self.solution.solver_name,
             message=self.solution.message,
+            constraint_duals=self.solution.constraint_duals,
+            constraint_slacks=self.solution.constraint_slacks,
+            reduced_costs=self.solution.reduced_costs,
+            active_constraints=self.solution.active_constraints,
+            objective_breakdown=self.solution.objective_breakdown,
+            metrics=self.solution.metrics,
         )
 
         return SolvedModel(

@@ -1,6 +1,6 @@
 import pytest
 
-from polyhedron import Model
+from polyhedron import Model, maximize, minimize
 from polyhedron.backends.compiler import compile_model
 from polyhedron.bridges import (
     apply_pyomo_values_to_polyhedron,
@@ -22,6 +22,19 @@ class BridgeElement(Element):
 
     def objective_contribution(self):
         return 2 * self.x + 3 * self.y
+
+
+class MultiObjectiveBridgeElement(Element):
+    x = Model.ContinuousVar(min=0, max=10)
+    y = Model.ContinuousVar(min=0, max=10)
+
+    @minimize(name="cost", weight=2.0)
+    def cost(self):
+        return self.x + self.y
+
+    @maximize(name="service", weight=0.5)
+    def service(self):
+        return self.y
 
 
 def _build_poly_model() -> tuple[Model, BridgeElement]:
@@ -75,6 +88,21 @@ def test_polyhedron_to_pyomo_conversion_linear_model() -> None:
     assert vars_count == 2
     assert cons_count == 2
     assert obj_count == 1
+
+
+def test_polyhedron_multi_objective_exports_as_single_weighted_pyomo_objective() -> None:
+    model = Model("poly-multi-bridge")
+    elem = MultiObjectiveBridgeElement("e1")
+    model.add_element(elem)
+
+    conversion = convert_polyhedron_model(model)
+    objectives = list(conversion.pyomo_model.component_data_objects(pyomo.Objective, active=True))
+
+    assert len(objectives) == 1
+
+    conversion.pyomo_variables[elem.x.name].set_value(3.0)
+    conversion.pyomo_variables[elem.y.name].set_value(4.0)
+    assert pytest.approx(pyomo.value(objectives[0].expr), rel=1e-9) == 12.0
 
 
 def test_roundtrip_value_transfer_between_polyhedron_and_pyomo() -> None:

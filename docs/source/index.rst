@@ -13,17 +13,20 @@ reliably over time.
 
 Unlike many libraries that focus primarily on algebraic model expression, Polyhedron
 puts emphasis on how optimization software is actually used in production:
-clear domain abstractions, repeatable diagnostics, scenario workflows, and regression
-checks that detect unintended behavior changes before release.
+clear domain abstractions, indexed decision structures, repeatable diagnostics,
+scenario workflows, and regression checks that detect unintended behavior changes
+before release.
 
 What You Can Do With Polyhedron
 -------------------------------
 
 - Model with domain objects (`Element`) instead of flat index-heavy declarations.
-- Keep quality high with static linting and explainability reports.
+- Maintain quality with static linting and explainability reports.
 - Diagnose infeasibility in structured reports instead of opaque solver output only.
 - Validate units and input contracts early to reduce costly model/debug iterations.
 - Run scenario batches and compare baseline vs. current behavior via drift checks.
+- Express table-shaped models with explicit index sets and variable families.
+- Encode uncertainty and business risk directly with worst-case, CVaR, chance, and staged-decision helpers.
 
 Who This Is For
 ---------------
@@ -41,13 +44,14 @@ Minimal Working Example
 
 .. code-block:: python
 
-   from polyhedron import Element, Model
+   from polyhedron import Element, Model, minimize
 
 
    class Plant(Element):
        production = Model.ContinuousVar(min=0, max=80, unit="MW")
 
-       def objective_contribution(self):
+       @minimize(name="cost")
+       def cost(self):
            return 18 * self.production
 
 

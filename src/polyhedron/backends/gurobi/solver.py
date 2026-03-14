@@ -9,7 +9,7 @@ from polyhedron.backends.base import BackendError, SolverBackend
 from polyhedron.backends.compiler import compile_model
 from polyhedron.backends.types import CallbackRegistry, SolveResult, SolveSettings, SolveStatus
 from polyhedron.core.constraint import Constraint
-from polyhedron.core.expression import Expression, QuadraticTerm
+from polyhedron.core.expression import Expression, QuadraticExpression, QuadraticTerm
 from polyhedron.core.variable import Variable, VarType
 from polyhedron.intelligence.context import SolverContext
 from polyhedron.intelligence.heuristics import HeuristicBase
@@ -78,6 +78,10 @@ class GurobiBackend(SolverBackend):
             if isinstance(expr, Expression):
                 linear = gp.quicksum(coef * var_map[var] for var, coef in expr.terms)
                 return linear + expr.constant
+            if isinstance(expr, QuadraticExpression):
+                linear = gp.quicksum(coef * var_map[var] for var, coef in expr.linear_terms)
+                quadratic = gp.quicksum(to_gurobi_expr(term) for term in expr.quadratic_terms)
+                return linear + quadratic + expr.constant
             if isinstance(expr, QuadraticTerm):
                 v1 = var_map[expr.var1]
                 v2 = var_map[expr.var2]

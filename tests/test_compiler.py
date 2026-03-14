@@ -22,4 +22,5 @@ def test_compile_model():
     compiled = compile_model(model)
     assert len(compiled.variables) == 1
     assert len(compiled.constraints) == 1
+    assert len(compiled.objectives) == 1
     assert len(compiled.objective_terms) == 1

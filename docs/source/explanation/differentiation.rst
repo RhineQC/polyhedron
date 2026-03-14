@@ -23,4 +23,4 @@ Current Boundaries
 ------------------
 
 - Bridge support is linear-only today.
-- Ecosystem breadth is still smaller than long-established projects.
+- Ecosystem breadth is smaller than long-established projects.

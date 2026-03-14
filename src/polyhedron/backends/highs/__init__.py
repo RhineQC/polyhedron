@@ -1,3 +1,3 @@
-class HighsBackend:
-    def __init__(self):
-        raise NotImplementedError("HiGHS backend not implemented")
+from polyhedron.backends.highs.solver import HighsBackend
+
+__all__ = ["HighsBackend"]

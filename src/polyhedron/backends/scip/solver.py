@@ -8,7 +8,7 @@ from polyhedron.backends.compiler import compile_model
 from polyhedron.backends.scip.plugins import ScipHookContext, ScipPlugin
 from polyhedron.backends.types import CallbackRegistry, SolveResult, SolveSettings, SolveStatus
 from polyhedron.core.constraint import Constraint
-from polyhedron.core.expression import Expression, QuadraticTerm
+from polyhedron.core.expression import Expression, QuadraticExpression, QuadraticTerm
 from polyhedron.core.variable import Variable, VarType
 from polyhedron.intelligence.context import SolverContext
 from polyhedron.intelligence.heuristics import HeuristicBase
@@ -67,6 +67,10 @@ class ScipBackend(SolverBackend):
             if isinstance(expr, Expression):
                 linear = pyscipopt.quicksum(coef * var_map[var] for var, coef in expr.terms)
                 return linear + expr.constant
+            if isinstance(expr, QuadraticExpression):
+                linear = pyscipopt.quicksum(coef * var_map[var] for var, coef in expr.linear_terms)
+                quadratic = pyscipopt.quicksum(to_scip_expr(term) for term in expr.quadratic_terms)
+                return linear + quadratic + expr.constant
             if isinstance(expr, QuadraticTerm):
                 v1 = var_map[expr.var1]
                 v2 = var_map[expr.var2]

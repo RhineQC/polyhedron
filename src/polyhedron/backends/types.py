@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Callable, Dict, Optional, Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from polyhedron.core.constraint import Constraint
     from polyhedron.core.variable import Variable
 
 
@@ -30,6 +31,12 @@ class SolveResult:
     values: Dict["Variable", float]
     solver_name: str
     message: Optional[str] = None
+    constraint_duals: Optional[Dict["Constraint", float]] = None
+    constraint_slacks: Optional[Dict["Constraint", float]] = None
+    reduced_costs: Optional[Dict["Variable", float]] = None
+    active_constraints: Optional[list["Constraint"]] = None
+    objective_breakdown: Optional[Dict[str, float]] = None
+    metrics: Optional[Dict[str, float]] = None
 
 
 class CallbackRegistry(Protocol):

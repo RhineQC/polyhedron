@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Iterable, List, Optional, Callable
+from dataclasses import dataclass, field
+from typing import Callable, Iterable, List, Optional
 
 from polyhedron.core.constraint import Constraint
 from polyhedron.core.expression import Expression, ExpressionLike
+from polyhedron.core.objective import Objective, flatten_weighted_objectives
 from polyhedron.core.variable import Variable
 
 
@@ -14,6 +15,7 @@ class CompiledModel:
     constraints: List[Constraint]
     objective_terms: List[ExpressionLike]
     objective_sense: str
+    objectives: List[Objective] = field(default_factory=list)
 
 
 def compile_model(model, hooks: Optional[Iterable[Callable[[str, dict], None]]] = None) -> CompiledModel:
@@ -36,21 +38,60 @@ def compile_model(model, hooks: Optional[Iterable[Callable[[str, dict], None]]] 
         if not isinstance(cons, Constraint):
             raise ValueError("All constraints must be materialized before compilation.")
         constraints.append(cons)
+    for cons in getattr(model, "_temporary_constraints", []):
+        if not isinstance(cons, Constraint):
+            raise ValueError("Temporary constraints must be Constraint instances.")
+        constraints.append(cons)
 
-    # Collect objective contributions with optional scenario resolution.
-    objective_terms: List[ExpressionLike] = []
+    # Collect objectives with optional scenario resolution, then flatten for backend compatibility.
+    objectives: List[Objective] = []
     for element in model.elements:
-        term = element.objective_contribution()
-        if term is None:
-            continue
-        resolver = getattr(model, "_resolve_scenario_operand", None)
-        objective_terms.append(resolver(term) if callable(resolver) else term)
+        for objective in element.objectives():
+            resolver = getattr(model, "_resolve_scenario_operand", None)
+            expression = objective.expression
+            if expression is None:
+                continue
+            if callable(resolver):
+                expression = resolver(expression)
+            if expression is None:
+                continue
+            objectives.append(
+                Objective(
+                    name=objective.name,
+                    sense=objective.sense,
+                    expression=expression,
+                    weight=objective.weight,
+                    priority=objective.priority,
+                    target=objective.target,
+                    abs_tolerance=objective.abs_tolerance,
+                    rel_tolerance=objective.rel_tolerance,
+                    group=objective.group,
+                    element_name=objective.element_name,
+                    method_name=objective.method_name,
+                )
+            )
+
+    for objective in getattr(model, "_explicit_objectives", []):
+        objectives.append(objective)
+
+    objective_override = getattr(model, "_compiled_objective_override", None)
+    if objective_override is not None:
+        objectives = list(objective_override)
+
+    objective_terms: List[ExpressionLike]
+    objective_sense: str
+    if objectives:
+        objective_terms, objective_sense = flatten_weighted_objectives(objectives)
+    else:
+        objective_terms = []
+        objective_sense = getattr(model, "objective_sense", "minimize")
 
     return CompiledModel(
         variables=variables,
         constraints=constraints,
+        objectives=objectives,
         objective_terms=objective_terms,
-        objective_sense=model.objective_sense,
+        objective_sense=objective_sense,
     )
 
 

@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 
 from polyhedron.contracts.runtime import validate_element_kwargs
 from polyhedron.core.constraint import Constraint
+from polyhedron.core.objective import Objective, iter_objective_methods, normalize_objective_sense
 from polyhedron.core.variable import VariableDefinition
 
 
-class Element(ABC):
+class Element:
     _model: Optional["Model"] = None
 
     def __init__(self, name: str, **kwargs):
@@ -49,9 +49,63 @@ class Element(ABC):
                 else:
                     self._constraints.append(constraints)
 
-    @abstractmethod
     def objective_contribution(self):
-        raise NotImplementedError
+        return 0.0
+
+    def _uses_legacy_objective(self) -> bool:
+        return self.__class__.objective_contribution is not Element.objective_contribution
+
+    def objectives(self) -> List[Objective]:
+        declared: List[Objective] = []
+        for metadata, method in iter_objective_methods(self):
+            expression = method()
+            if expression is None:
+                continue
+            declared.append(
+                Objective(
+                    name=metadata.name,
+                    sense=metadata.sense,
+                    expression=expression,
+                    weight=metadata.weight,
+                    priority=metadata.priority,
+                    target=metadata.target,
+                    abs_tolerance=metadata.abs_tolerance,
+                    rel_tolerance=metadata.rel_tolerance,
+                    group=metadata.group,
+                    element_name=self.name,
+                    method_name=method.__name__,
+                )
+            )
+
+        if declared and self._uses_legacy_objective():
+            raise ValueError(
+                f"Element '{self.name}' mixes @objective-decorated methods with "
+                "objective_contribution(). Use one objective declaration style per element."
+            )
+
+        if declared:
+            return declared
+
+        if self._uses_legacy_objective():
+            expression = self.objective_contribution()
+            if expression is None:
+                return []
+            sense = normalize_objective_sense(
+                getattr(getattr(self, "_model", None), "objective_sense", "minimize")
+            )
+            return [
+                Objective(
+                    name="primary",
+                    sense=sense,
+                    expression=expression,
+                    weight=1.0,
+                    priority=0,
+                    element_name=self.name,
+                    method_name="objective_contribution",
+                )
+            ]
+
+        return []
 
 
 class ConstraintDecorators:

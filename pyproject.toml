@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "polyhedron-opt"
-version = "0.1.0"
+version = "0.2.0"
 description = "Optimization modeling framework with domain-driven modeling and solver intelligence"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -28,6 +28,8 @@ dependencies = [
 [project.optional-dependencies]
 scip = ["pyscipopt>=4.4.0"]
 gurobi = ["gurobipy>=13.0.1"]
+glpk = ["swiglpk>=5.0.12"]
+highs = ["highspy>=1.13.0"]
 data = ["pandas>=2.0.0", "polars>=0.20.0", "SQLAlchemy>=2.0.0"]
 contracts = ["pydantic>=2.0.0"]
 bridge = ["pyomo>=6.0.0"]
@@ -44,7 +46,8 @@ packages = ["src/polyhedron"]
 include = [
   "src",
   "README.md",
-  "LICENSE"
+  "LICENSE",
+  "COPYRIGHT"
 ]
 
 [tool.ruff]

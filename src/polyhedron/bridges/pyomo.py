@@ -147,7 +147,10 @@ def convert_pyomo_model(
 
     objectives = list(pyomo_model.component_data_objects(PyomoObjective, active=True))
     if len(objectives) > 1:
-        raise ValueError("Only one active objective is supported for conversion.")
+        raise ValueError(
+            "Only one active Pyomo objective is supported for conversion. "
+            "Flatten multiple objectives into a single weighted objective before converting."
+        )
 
     if objectives:
         objective = objectives[0]

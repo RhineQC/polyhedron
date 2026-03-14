@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union, TYPE_CHECKING
 
-from polyhedron.core.expression import Expression, QuadraticTerm
+from polyhedron.core.expression import Expression, QuadraticExpression, QuadraticTerm
 from polyhedron.core.constraint import Constraint
 
 
@@ -33,11 +33,19 @@ class Variable:
     def __mul__(self, other: Number) -> Expression:
         if isinstance(other, Variable):
             return QuadraticTerm(self, other, coefficient=1.0)
+        if isinstance(other, Expression):
+            return other * self
+        if isinstance(other, QuadraticExpression):
+            raise TypeError("Quadratic expressions cannot be multiplied by variables.")
         return Expression([(self, other)])
 
     def __rmul__(self, other: Number) -> Expression:
         if isinstance(other, Variable):
             return QuadraticTerm(other, self, coefficient=1.0)
+        if isinstance(other, Expression):
+            return other * self
+        if isinstance(other, QuadraticExpression):
+            raise TypeError("Quadratic expressions cannot be multiplied by variables.")
         return Expression([(self, other)])
 
     def __neg__(self) -> Expression:

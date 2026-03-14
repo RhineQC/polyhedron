@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Callable, Iterable, List, Optional
 
 from polyhedron.core.constraint import Constraint
-from polyhedron.core.expression import Expression, QuadraticTerm
+from polyhedron.core.expression import Expression, QuadraticExpression, QuadraticTerm
 from polyhedron.core.variable import Variable
 from polyhedron.core.errors import ValidationIssue
 
@@ -25,7 +25,7 @@ def _is_operand(value: object) -> bool:
         scenario_values_cls = None  # type: ignore[assignment]
     if scenario_values_cls is not None and isinstance(value, scenario_values_cls):
         return True
-    return isinstance(value, (Variable, Expression, QuadraticTerm, int, float))
+    return isinstance(value, (Variable, Expression, QuadraticExpression, QuadraticTerm, int, float))
 
 
 def validate_model(model, hooks: Optional[Iterable[DebugHook]] = None) -> List[ValidationIssue]:
@@ -89,12 +89,12 @@ def validate_model(model, hooks: Optional[Iterable[DebugHook]] = None) -> List[V
 
     for element in getattr(model, "elements", []):
         try:
-            element.objective_contribution()
+            element.objectives()
         except Exception as exc:  # noqa: BLE001
             issues.append(
                 ValidationIssue(
                     "E007",
-                    f"Objective contribution failed: {exc}",
+                    f"Objective evaluation failed: {exc}",
                     {"element": getattr(element, "name", None)},
                 )
             )

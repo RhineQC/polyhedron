@@ -5,7 +5,7 @@ Requirements
 ------------
 
 - Python 3.10+
-- A MILP backend if you want to solve models (`SCIP` or `Gurobi`)
+- A MILP backend if you want to solve models (`SCIP`, `GLPK`, `HiGHS`, or `Gurobi`)
 
 Install Base Package
 --------------------
@@ -20,9 +20,18 @@ Install With Optional Features
 .. code-block:: bash
 
    pip install "polyhedron-opt[scip]"
+   pip install "polyhedron-opt[glpk]"
+   pip install "polyhedron-opt[highs]"
    pip install "polyhedron-opt[gurobi]"
    pip install "polyhedron-opt[contracts]"
    pip install "polyhedron-opt[bridge]"
+
+`HiGHS` uses the `highspy` package and is a good open-source option when you do
+not need SCIP-specific plugin hooks or Gurobi-specific commercial features.
+
+`GLPK` uses the `swiglpk` package and is a good open-source option for linear
+LP and MILP models when you do not need quadratic objectives or callback-based
+solver integrations.
 
 Install From Source
 -------------------

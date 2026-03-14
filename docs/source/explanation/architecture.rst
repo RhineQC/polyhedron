@@ -21,5 +21,7 @@ Feature Layers (Backend-Neutral)
 Why This Split Matters
 ----------------------
 
-Polyhedron keeps feature innovation independent from solver integrations. This means
-new analysis and governance features can be added without touching backend logic.
+Polyhedron separates feature innovation from solver integrations. This means new
+analysis, indexing, uncertainty, and governance features can be added without
+rewriting backend logic, while solver-specific code remains focused on translation
+and execution.

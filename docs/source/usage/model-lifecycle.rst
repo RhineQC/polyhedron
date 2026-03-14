@@ -14,7 +14,7 @@ Suggested CI Sequence
 
 .. code-block:: bash
 
-   PYTHONPATH=src pytest -q -m "not scip and not gurobi and not data and not bridge"
+   PYTHONPATH=src pytest -q -m "not scip and not gurobi and not glpk and not highs and not data and not bridge"
    PYTHONPATH=src python -m your_project.validate_models
 
 Production Readiness Checklist
