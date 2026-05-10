@@ -3,6 +3,9 @@ Model Across Time Horizons
 
 Use `TimeHorizon` and `Schedule` to expand elements over periods.
 
+For richer recursions and rolling-window logic, combine this with
+``StateSeries`` and ``WindowSeries`` from :doc:`state-and-staged-modeling`.
+
 .. code-block:: python
 
    from polyhedron import Element, Model
@@ -34,4 +37,7 @@ Tips
 
 - Keep period constraint names stable (`demand:0`, `demand:1`, ...).
 - Add linking constraints (ramping/storage balance) explicitly.
+- Prefer ``StateSeries`` for inventory/storage recursions instead of rebuilding the
+    same balance loop in every model.
+- Prefer ``WindowSeries`` for lag links, ramping, and rolling-sum limits.
 - Use scenarios to test peak and low-demand profiles.

@@ -25,3 +25,4 @@ Production Readiness Checklist
 - Linter returns zero `error` findings.
 - Unit checks pass for all critical equations.
 - Baseline snapshots are stored for drift comparison.
+- CI gate uses `lint_model(model).exit_code(fail_on="error")`.

@@ -28,6 +28,149 @@ class ScenarioTree:
     def stage(self, level: int) -> tuple[ScenarioNode, ...]:
         return tuple(node for node in self.nodes if node.stage == level)
 
+    def node(self, name: str) -> ScenarioNode:
+        for node in self.nodes:
+            if node.name == name:
+                return node
+        raise KeyError(f"Unknown scenario node '{name}'.")
+
+    def children(self, name: str) -> tuple[ScenarioNode, ...]:
+        return tuple(node for node in self.nodes if node.parent == name)
+
+    def ancestors(self, name: str, *, include_self: bool = False) -> tuple[ScenarioNode, ...]:
+        lineage: list[ScenarioNode] = []
+        current = self.node(name)
+        if include_self:
+            lineage.append(current)
+        while current.parent is not None:
+            current = self.node(current.parent)
+            lineage.append(current)
+        return tuple(reversed(lineage))
+
+    def descendant_leaves(self, name: str) -> tuple[ScenarioNode, ...]:
+        leaves: list[ScenarioNode] = []
+        pending = [self.node(name)]
+        while pending:
+            current = pending.pop()
+            children = self.children(current.name)
+            if not children:
+                leaves.append(current)
+                continue
+            pending.extend(children)
+        return tuple(sorted(leaves, key=lambda item: item.name))
+
+    def leaf_scenarios(self) -> tuple[str, ...]:
+        return tuple(self._scenario_id(leaf) for leaf in self.leaves())
+
+    def nonanticipativity_groups(
+        self,
+        stage: int,
+        *,
+        scenarios: Iterable[str] | None = None,
+    ) -> tuple[tuple[str, ...], ...]:
+        scenario_filter = None if scenarios is None else set(scenarios)
+        groups: list[tuple[str, ...]] = []
+        for node in self.stage(stage):
+            scenario_group = tuple(
+                sorted(
+                    scenario
+                    for scenario in (self._scenario_id(leaf) for leaf in self.descendant_leaves(node.name))
+                    if scenario_filter is None or scenario in scenario_filter
+                )
+            )
+            if scenario_group:
+                groups.append(scenario_group)
+        return tuple(sorted(groups))
+
+    @staticmethod
+    def _scenario_id(node: ScenarioNode) -> str:
+        scenario = node.metadata.get("scenario")
+        return str(scenario) if scenario is not None else node.name
+
+
+class ScenarioTreeBuilder:
+    @staticmethod
+    def from_paths(
+        scenario_paths: Mapping[str, Sequence[str]],
+        *,
+        probabilities: Mapping[str, float] | None = None,
+    ) -> ScenarioTree:
+        if not scenario_paths:
+            raise ValueError("scenario_paths must not be empty.")
+        default_probability = 1.0 / len(scenario_paths)
+        leaf_probabilities = {
+            scenario: float((probabilities or {}).get(scenario, default_probability))
+            for scenario in scenario_paths
+        }
+        nodes: dict[str, ScenarioNode] = {
+            "root": ScenarioNode(name="root", stage=0, probability=1.0, parent=None, metadata={"root": True})
+        }
+        for scenario, path in scenario_paths.items():
+            if not path:
+                raise ValueError("Each scenario path must contain at least one branch label.")
+            parent = "root"
+            for stage_index, label in enumerate(path[:-1], start=1):
+                node_name = f"{parent}/{label}"
+                if node_name not in nodes:
+                    nodes[node_name] = ScenarioNode(
+                        name=node_name,
+                        stage=stage_index,
+                        probability=0.0,
+                        parent=parent,
+                        metadata={"branch": label},
+                    )
+                parent = node_name
+            leaf_stage = len(path)
+            nodes[scenario] = ScenarioNode(
+                name=scenario,
+                stage=leaf_stage,
+                probability=leaf_probabilities[scenario],
+                parent=parent,
+                metadata={"scenario": scenario, "branch": path[-1]},
+            )
+        aggregated = dict(leaf_probabilities)
+        ordered_nodes = sorted(nodes.values(), key=lambda node: node.stage, reverse=True)
+        for node in ordered_nodes:
+            if node.name == "root":
+                continue
+            parent = node.parent
+            if parent is not None:
+                aggregated[parent] = aggregated.get(parent, 0.0) + aggregated.get(node.name, node.probability)
+        updated_nodes = []
+        for node in nodes.values():
+            updated_nodes.append(
+                ScenarioNode(
+                    name=node.name,
+                    stage=node.stage,
+                    probability=aggregated.get(node.name, node.probability),
+                    parent=node.parent,
+                    metadata=node.metadata,
+                )
+            )
+        return ScenarioTree(tuple(sorted(updated_nodes, key=lambda item: (item.stage, item.name))))
+
+    @staticmethod
+    def from_branching(
+        branching: Sequence[int],
+        *,
+        prefix: str = "scenario",
+    ) -> ScenarioTree:
+        if not branching:
+            raise ValueError("branching must contain at least one stage.")
+        paths: dict[str, tuple[str, ...]] = {}
+        partial_paths = [tuple()]
+        for stage_index, width in enumerate(branching, start=1):
+            if width <= 0:
+                raise ValueError("Each branching width must be positive.")
+            next_paths: list[tuple[str, ...]] = []
+            for partial in partial_paths:
+                for branch_index in range(width):
+                    next_paths.append(partial + (f"stage{stage_index}_b{branch_index}",))
+            partial_paths = next_paths
+        for scenario_index, path in enumerate(partial_paths):
+            paths[f"{prefix}_{scenario_index}"] = path
+        return ScenarioTreeBuilder.from_paths(paths)
+
 
 def worst_case(model, scenario_values: Mapping[str, object], *, name: str):
     bounds = [expression_bounds(value) for value in scenario_values.values()]
@@ -117,6 +260,7 @@ def chance_constraint(
 __all__ = [
     "ScenarioNode",
     "ScenarioTree",
+    "ScenarioTreeBuilder",
     "worst_case",
     "cvar",
     "nonanticipativity",

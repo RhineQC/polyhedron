@@ -178,3 +178,25 @@ This is useful when uncertainty unfolds over time rather than all at once. The t
 records which nodes belong to which stage, which node is the parent of another node,
 and what probability belongs to each branch. That structure can then drive staged
 decision logic, reporting, or custom decomposition workflows.
+
+For element-first staged decision modeling, use ``ScenarioTreeBuilder`` together
+with ``StageDecisions``.
+
+.. code-block:: python
+
+   tree = model.scenario_tree(
+       {
+           "s1": ("up", "wet"),
+           "s2": ("up", "dry"),
+           "s3": ("down", "wet"),
+           "s4": ("down", "dry"),
+       }
+   )
+
+   stages = model.stage_decisions()
+   stages.register_many(stage=0, scenarios=first_stage_decisions, attr="buy")
+   stages.register_many(stage=1, scenarios=second_stage_decisions, attr="hedge")
+   stages.nonanticipativity(tree)
+
+This gives you automatic nonanticipativity groups derived from the tree instead of
+manually listing scenario groups.

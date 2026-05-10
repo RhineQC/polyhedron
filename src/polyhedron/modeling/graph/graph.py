@@ -47,3 +47,15 @@ class Graph:
     def add_edges(self, edges: Iterable[GraphEdge]) -> None:
         for edge in edges:
             self.add_edge(edge)
+
+    def in_edges(self, node: GraphNode) -> List[GraphEdge]:
+        return [edge for edge in self.edges if edge.target == node]
+
+    def out_edges(self, node: GraphNode) -> List[GraphEdge]:
+        return [edge for edge in self.edges if edge.source == node]
+
+    def predecessors(self, node: GraphNode) -> List[GraphNode]:
+        return [edge.source for edge in self.in_edges(node)]
+
+    def successors(self, node: GraphNode) -> List[GraphNode]:
+        return [edge.target for edge in self.out_edges(node)]

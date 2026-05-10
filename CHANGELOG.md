@@ -7,6 +7,24 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-11
+
+### Added
+- **State & staged modeling**: `StateSeries` for inventory/storage recursions over periods, `WindowSeries` for lag links, ramping, and rolling-sum limits, `StageDecision` / `StageDecisions` for multi-stage stochastic decision modeling, and `ElementPolicy` for policy modeling over discrete element sets.
+- **Sensitivity analysis**: `sensitivity()` function and `SensitivityReport`, `ConstraintSensitivity`, `VariableSensitivity` types to inspect shadow prices, reduced costs, binding constraints, and bottlenecks after solving.
+- **Extended `ScenarioTree`**: new methods `node()`, `children()`, `ancestors()`, `descendant_leaves()`, `leaf_scenarios()`, and `nonanticipativity_groups()` for richer stochastic tree navigation; `ScenarioTreeBuilder` for constructing trees from scenario paths.
+- **Extended `Graph`**: `in_edges()`, `out_edges()`, `predecessors()`, and `successors()` convenience methods on `Graph`.
+- **New `Model` methods**: `state_series()`, `window_series()`, `stage_decisions()`, `element_policy()`, and `scenario_tree()` factory methods on the `Model` class.
+- **New examples**: `examples/investment_portfolio.py` (full investment portfolio flow), `examples/risk_flow/staged_procurement_example.py`, and `examples/task_scheduling/window_policy_example.py`.
+- **New how-to documentation page**: `state-and-staged-modeling` covering `StateSeries`, `WindowSeries`, `StageDecisions`, and `ElementPolicy`.
+- **Sensitivity analysis documentation**: new section in the model-quality how-to guide with code examples for shadow prices, bottleneck detection, and variable bound analysis.
+
+### Changed
+- Top-level public API (`polyhedron`) now exports `StateSeries`, `WindowSeries`, `StageDecision`, `StageDecisions`, `ElementPolicy`, `ScenarioTreeBuilder`, `sensitivity`, `SensitivityReport`, `ConstraintSensitivity`, and `VariableSensitivity`.
+- `polyhedron.modeling` now exports the new state, window, stage, and policy types, as well as `ScenarioTreeBuilder`.
+- `polyhedron.quality` now exports `sensitivity`, `SensitivityReport`, `ConstraintSensitivity`, and `VariableSensitivity`.
+- Documentation API reference and how-to index updated to include new modules and pages.
+
 ## [0.2.0] - 2026-03-14
 
 ### Added

@@ -9,14 +9,20 @@ from polyhedron.modeling import (
     IndexSet,
     InventoryBucket,
     InventorySeries,
+    ElementPolicy,
     Param,
     Resource,
     ScenarioNode,
     ScenarioTree,
+    ScenarioTreeBuilder,
     SoftConstraint,
+    StageDecision,
+    StageDecisions,
+    StateSeries,
     SelectionGroup,
     SelectableElement,
     VarArray,
+    WindowSeries,
     abs_var,
     add_sos1,
     add_sos2,
@@ -37,7 +43,15 @@ from polyhedron.modeling import (
 from polyhedron.modeling.graph import Graph, GraphEdge, GraphNode, capacity_on_edges, flow_conservation
 from polyhedron.temporal.time_horizon import TimeHorizon
 from polyhedron.temporal.schedule import Schedule
-from polyhedron.quality import debug_infeasibility, explain_model, lint_model
+from polyhedron.quality import (
+    ConstraintSensitivity,
+    SensitivityReport,
+    VariableSensitivity,
+    debug_infeasibility,
+    explain_model,
+    lint_model,
+    sensitivity,
+)
 from polyhedron.units import UnitRegistry, validate_model_units
 from polyhedron.scenarios import ScenarioCase, ScenarioRunner
 from polyhedron.contracts import with_data_contract
@@ -69,7 +83,10 @@ __all__ = [
     "Resource",
     "InventoryBucket",
     "InventorySeries",
+    "StateSeries",
+    "WindowSeries",
     "DependencyGroup",
+    "ElementPolicy",
     "SoftConstraint",
     "soften_constraint",
     "abs_var",
@@ -83,6 +100,9 @@ __all__ = [
     "add_sos2",
     "ScenarioNode",
     "ScenarioTree",
+    "ScenarioTreeBuilder",
+    "StageDecision",
+    "StageDecisions",
     "worst_case",
     "cvar",
     "nonanticipativity",
@@ -90,6 +110,10 @@ __all__ = [
     "lint_model",
     "debug_infeasibility",
     "explain_model",
+    "sensitivity",
+    "SensitivityReport",
+    "ConstraintSensitivity",
+    "VariableSensitivity",
     "UnitRegistry",
     "validate_model_units",
     "ScenarioCase",

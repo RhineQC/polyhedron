@@ -19,8 +19,10 @@ Core examples
 - `examples/multi_objective_flow/priority_objectives_example.py`
 - `examples/performance_flow/performance_timing_example.py`
 - `examples/risk_flow/risk_aware_planning_example.py`
+- `examples/risk_flow/staged_procurement_example.py`
 - `examples/selection_flow/project_selection_example.py`
 - `examples/task_scheduling/task_scheduling_miqp_example.py`
+- `examples/task_scheduling/window_policy_example.py`
 - `examples/transformation_flow/transformation_primitives_example.py`
 - `examples/uc_flow/unit_commitment_example.py`
 

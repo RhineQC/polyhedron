@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "polyhedron-opt"
-version = "0.2.0"
+version = "0.3.0"
 description = "Optimization modeling framework with domain-driven modeling and solver intelligence"
 readme = "README.md"
 requires-python = ">=3.10"

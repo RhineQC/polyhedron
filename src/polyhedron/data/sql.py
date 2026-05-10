@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from typing import Dict, Iterable, Optional, Type
 
-from sqlalchemy import text
+try:
+    from sqlalchemy import text as _sa_text
+except ImportError:  # pragma: no cover
+    _sa_text = None  # type: ignore[assignment]
 
 from polyhedron.core.errors import DataError
 
@@ -14,7 +17,7 @@ def from_sql(
     mapping: Optional[Dict[str, str]] = None,
 ) -> Iterable:
     try:
-        result = connection.execute(text(query))
+        result = connection.execute(_sa_text(query))
     except Exception as exc:  # noqa: BLE001
         raise DataError(
             code="E_DATA_SQL",

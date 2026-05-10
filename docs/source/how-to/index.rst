@@ -11,6 +11,7 @@ Task-focused guides for common workflows.
    indexed-modeling
    graph-flow-model
    temporal-modeling
+   state-and-staged-modeling
    selection-and-assignment
    units-and-contracts
    model-quality

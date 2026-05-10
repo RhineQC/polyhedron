@@ -19,6 +19,7 @@ Top-Level Reference
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 
 Selected Modules
 ----------------
@@ -33,12 +34,17 @@ Selected Modules
    core.objective
    modeling.element
    modeling.indexing
+   modeling.state
+   modeling.windows
+   modeling.stages
+   modeling.policies
    modeling.transforms
    modeling.uncertainty
    modeling.graph
    quality.linter
    quality.infeasibility
    quality.explainability
+   quality.sensitivity
    units.dimensions
    units.validation
    scenarios.layer

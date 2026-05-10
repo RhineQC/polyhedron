@@ -103,6 +103,32 @@ class Model:
                 self.add_element(element_instance)
         return schedule
 
+    def state_series(self, periods: Iterable[object]):
+        from polyhedron.modeling.state import StateSeries
+
+        return StateSeries(self, tuple(periods))
+
+    def window_series(self, periods: Iterable[object]):
+        from polyhedron.modeling.windows import WindowSeries
+
+        return WindowSeries(self, tuple(periods))
+
+    def stage_decisions(self):
+        from polyhedron.modeling.stages import StageDecisions
+
+        return StageDecisions(self)
+
+    def element_policy(self, elements: Iterable[object]):
+        from polyhedron.modeling.policies import ElementPolicy
+
+        return ElementPolicy(self, tuple(elements))
+
+    def scenario_tree(self, scenario_paths: Dict[str, Iterable[str]], *, probabilities: Dict[str, float] | None = None):
+        from polyhedron.modeling.uncertainty import ScenarioTreeBuilder
+
+        normalized = {name: tuple(path) for name, path in scenario_paths.items()}
+        return ScenarioTreeBuilder.from_paths(normalized, probabilities=probabilities)
+
     def constraint(self, name: Optional[str] = None, foreach=None):
         def decorator(func: Callable):
             if foreach is not None:

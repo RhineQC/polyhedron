@@ -13,8 +13,8 @@ os.environ.setdefault("PYTHONPATH", str(SRC))
 project = "Polyhedron"
 author = "RhineQC GmbH"
 copyright = "2026, RhineQC GmbH"
-version = "0.2"
-release = "0.2.0"
+version = "0.3"
+release = "0.3.0"
 
 extensions = [
     "sphinx.ext.autodoc",
