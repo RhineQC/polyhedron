@@ -1,80 +1,16 @@
-/* Polyhedron docs theme accents — matched to the logo's palette:
-   deep magenta-purple #6a1b9a, indigo-blue #2f5fbf, teal #2f9e8f,
-   leaf green #7cb342. A light touch over sphinx_rtd_theme. */
-
 .wy-nav-content {
   max-width: 1080px;
 }
 
-/* Sidebar header (logo area) */
-.wy-side-nav-search {
-  background-color: #3a1d6e;
-}
+/* Sidebar header (logo area): scale the logo down; the navigation itself
+   keeps the default sphinx_rtd_theme blue. */
 .wy-side-nav-search > a img.logo {
   max-width: 56px;
   width: 56px;
   height: auto;
   margin-bottom: 0.5rem;
 }
-.wy-side-nav-search input[type="text"] {
-  border-color: #6a3fae;
-}
-
-/* Sidebar body */
-.wy-nav-side {
-  background-color: #2a1550;
-}
-.wy-menu-vertical a {
-  color: #d8cdf0;
-}
-.wy-menu-vertical a:hover {
-  background-color: #5b3aa0;
-  color: #ffffff;
-}
-.wy-menu-vertical li.current > a,
-.wy-menu-vertical li.on a {
-  border-right: 3px solid #4fa8a0;
-}
-.wy-menu-vertical p.caption {
-  color: #8dc63f;
-}
-
-/* Mobile top bar */
-.wy-nav-top {
-  background-color: #3a1d6e;
-}
-
-/* Links */
-a,
-.rst-content a {
-  color: #6a3fae;
-}
-a:hover,
-.rst-content a:hover {
-  color: #2f9e8f;
-}
-
-/* Version badge */
-.rst-versions .rst-current-version {
-  background-color: #2a1550;
-  color: #8dc63f;
-}
-
-/* Admonitions: use palette accents */
-.rst-content .note .admonition-title {
-  background-color: #4a5fbf;
-}
-.rst-content .tip .admonition-title,
-.rst-content .hint .admonition-title {
-  background-color: #7cb342;
-}
-
-/* sphinx-design cards: subtle purple/teal accent on hover */
-.sd-card:hover {
-  border-color: #6a3fae;
-  box-shadow: 0 0.25rem 0.75rem rgba(106, 63, 174, 0.25);
-}
 
 .rst-content code.literal {
-  color: #4a2f8f;
+  color: #0f2f53;
 }
