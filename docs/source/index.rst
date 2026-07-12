@@ -78,13 +78,6 @@ before release.
       Backend configuration, warm starts, Pyomo bridges, and MPS/LP export
       and import.
 
-   .. grid-item-card:: Worked Example
-      :link: example
-      :link-type: doc
-
-      A complete multi-period generation-planning model, built step by step
-      end to end.
-
 Minimal Working Example
 ------------------------
 
@@ -121,7 +114,6 @@ Where To Start
 - Modeling patterns (indexed, graph, multi-objective, staged, temporal): :doc:`modeling-patterns`
 - Quality, diagnostics, risk, and regression workflows: :doc:`quality-and-diagnostics`
 - Solver configuration and Pyomo/MPS/LP interop: :doc:`solvers-and-interop`
-- A complete step-by-step worked example: :doc:`example`
 - Full API and module reference: :doc:`api`
 
 .. toctree::
@@ -134,16 +126,4 @@ Where To Start
    modeling-patterns
    quality-and-diagnostics
    solvers-and-interop
-   example
    api
-
-.. toctree::
-   :hidden:
-
-   imprint
-
-.. raw:: html
-
-   <p style="font-size: 0.8em; color: #888; margin-top: 3em;">
-     <a href="imprint.html">Imprint / Impressum</a>
-   </p>
