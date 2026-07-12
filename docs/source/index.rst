@@ -127,3 +127,14 @@ Where To Start
    quality-and-diagnostics
    solvers-and-interop
    api
+
+.. toctree::
+   :hidden:
+
+   imprint
+
+.. raw:: html
+
+   <p style="font-size: 0.8em; color: #888; margin-top: 3em;">
+     <a href="imprint.html">Imprint / Impressum</a>
+   </p>
