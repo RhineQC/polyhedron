@@ -29,6 +29,7 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 autosummary_generate = True
+autoclass_content = "both"
 autodoc_member_order = "bysource"
 autodoc_typehints = "description"
 napoleon_google_docstring = True
@@ -41,8 +42,36 @@ intersphinx_mapping = {
     "pyscipopt": ("https://pyscipopt.readthedocs.io/en/latest/", None),
 }
 
-html_theme = "sphinx_rtd_theme"
+# sphinx-copybutton and sphinx-design are optional; degrade gracefully if
+# not installed.
+try:
+    import sphinx_copybutton  # noqa: F401
+
+    extensions.append("sphinx_copybutton")
+except ImportError:
+    pass
+
+try:
+    import sphinx_design  # noqa: F401
+
+    extensions.append("sphinx_design")
+except ImportError:
+    pass
+
+try:
+    import sphinx_rtd_theme  # noqa: F401
+
+    html_theme = "sphinx_rtd_theme"
+except ImportError:
+    html_theme = "alabaster"
+
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
-html_title = "Polyhedron Documentation"
+html_logo = "_static/polyhedron-logo.png"
 html_favicon = "_static/polyhedron-favicon.png"
+html_title = "Polyhedron Documentation"
+html_theme_options = (
+    {"navigation_depth": 3, "collapse_navigation": False, "logo_only": True}
+    if html_theme == "sphinx_rtd_theme"
+    else {}
+)

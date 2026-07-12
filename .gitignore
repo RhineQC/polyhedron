@@ -17,5 +17,5 @@ dist/
 .whl
 .vscode/
 docs/build/
-docs/source/reference/generated/
+docs/source/_autosummary/
 build/

@@ -1,11 +1,11 @@
 API Reference
-=============
+==============
 
 Core Public API
 ---------------
 
 Public API Stability
---------------------
+---------------------
 
 The re-exports on ``polyhedron`` and the modules listed in this reference are
 the supported public API. Modules or attributes with leading underscores, plus
@@ -13,7 +13,7 @@ anything under ``polyhedron._internal``, are internal implementation details and
 may change between minor releases.
 
 Top-Level Reference
--------------------
+--------------------
 
 .. automodule:: polyhedron
    :members:
@@ -22,12 +22,12 @@ Top-Level Reference
    :no-index:
 
 Selected Modules
-----------------
+------------------
 
 .. currentmodule:: polyhedron
 
 .. autosummary::
-   :toctree: generated
+   :toctree: _autosummary
    :recursive:
 
    core.model

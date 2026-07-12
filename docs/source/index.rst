@@ -6,6 +6,9 @@ Polyhedron Documentation
    :width: 96px
    :align: right
 
+**A domain-driven Python optimization modeling framework with built-in quality
+and governance tooling.**
+
 Polyhedron is a Python optimization modeling framework for teams that need more than
 just "build model and solve." It combines a domain-driven modeling DSL with practical
 quality and governance tooling so models can be maintained, reviewed, and operated
@@ -17,30 +20,66 @@ clear domain abstractions, indexed decision structures, repeatable diagnostics,
 scenario workflows, and regression checks that detect unintended behavior changes
 before release.
 
-What You Can Do With Polyhedron
--------------------------------
+.. grid:: 1 1 2 2
+   :gutter: 3
 
-- Model with domain objects (`Element`) instead of flat index-heavy declarations.
-- Maintain quality with static linting and explainability reports.
-- Diagnose infeasibility in structured reports instead of opaque solver output only.
-- Validate units and input contracts early to reduce costly model/debug iterations.
-- Run scenario batches and compare baseline vs. current behavior via drift checks.
-- Express table-shaped models with explicit index sets and variable families.
-- Encode uncertainty and business risk directly with worst-case, CVaR, chance, and staged-decision helpers.
+   .. grid-item-card:: Modeling Patterns
 
-Who This Is For
----------------
+      Indexed structures, graph flow models, multi-objective declarations,
+      selection/assignment helpers, staged decisions, and time horizons.
+      :doc:`Browse the guides → <modeling-patterns>`
 
-Polyhedron is especially useful for teams building optimization services in energy,
-logistics, operations, or planning contexts where model behavior must be transparent,
-reviewable, and stable across versions.
+   .. grid-item-card:: Quality And Diagnostics
 
-If you need only a minimal algebraic layer, other mature libraries may be enough.
-If you need modeling plus operational safeguards and lifecycle tooling, Polyhedron is
-positioned for that gap.
+      Linting, explainability, infeasibility diagnostics, sensitivity analysis,
+      risk primitives, and scenario/regression workflows.
+      :doc:`See the tooling → <quality-and-diagnostics>`
+
+.. grid:: 2 2 3 3
+   :gutter: 3
+
+   .. grid-item-card:: Installation
+      :link: installation
+      :link-type: doc
+
+      Requirements, optional solver extras, and installing from source.
+
+   .. grid-item-card:: Quickstart
+      :link: quickstart
+      :link-type: doc
+
+      A minimal model, guided walkthroughs, and curated example programs.
+
+   .. grid-item-card:: Concepts
+      :link: concepts
+      :link-type: doc
+
+      Architecture layers and how Polyhedron differs from general modeling
+      libraries.
+
+   .. grid-item-card:: Modeling Patterns
+      :link: modeling-patterns
+      :link-type: doc
+
+      Indexed modeling, graph flow, multi-objective, selection/assignment,
+      state/staged, temporal, and units/contracts.
+
+   .. grid-item-card:: Quality And Diagnostics
+      :link: quality-and-diagnostics
+      :link-type: doc
+
+      Linting, explainability, sensitivity, risk and uncertainty, scenarios,
+      and regression checks.
+
+   .. grid-item-card:: Solvers And Interop
+      :link: solvers-and-interop
+      :link-type: doc
+
+      Backend configuration, warm starts, Pyomo bridges, and MPS/LP export
+      and import.
 
 Minimal Working Example
------------------------
+------------------------
 
 .. code-block:: python
 
@@ -67,48 +106,24 @@ Minimal Working Example
    print(solved.status, solved.get_value(p.production))
 
 Where To Start
---------------
+---------------
 
 - Installation and setup: :doc:`installation`
-- First solve in a few lines: :doc:`quickstart`
-- Guided build-up tutorials: :doc:`tutorials/index`
-- Task-oriented modeling guides: :doc:`how-to/index`
-- Practical usage and operations: :doc:`usage/index`
-- Full API and module reference: :doc:`reference/index`
+- First solve in a few lines, plus guided walkthroughs: :doc:`quickstart`
+- Core concepts and architecture: :doc:`concepts`
+- Modeling patterns (indexed, graph, multi-objective, staged, temporal): :doc:`modeling-patterns`
+- Quality, diagnostics, risk, and regression workflows: :doc:`quality-and-diagnostics`
+- Solver configuration and Pyomo/MPS/LP interop: :doc:`solvers-and-interop`
+- Full API and module reference: :doc:`api`
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting Started
+   :hidden:
 
    installation
    quickstart
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorials
-
-   tutorials/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Usage
-
-   usage/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: How-To Guides
-
-   how-to/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Explanations
-
-   explanation/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Reference
-
-   reference/index
+   concepts
+   modeling-patterns
+   quality-and-diagnostics
+   solvers-and-interop
+   api
